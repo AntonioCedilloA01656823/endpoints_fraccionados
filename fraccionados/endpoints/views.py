@@ -32,6 +32,27 @@ class Calificacion:
         self.numero = numero
     def toJSON(self):
         return dumps(self, default=lambda o:o.__dict__, sort_keys=False, indent=4)
+    
+
+class Stats:
+    def __init__(self, tiempo_promedio,tasa_exito,problemas_resueltos):
+        self.tiempo_promedio = tiempo_promedio
+        self.tasa_exito = tasa_exito
+        self.problemas_resueltos = problemas_resueltos
+    def toJSON(self):
+        return dumps(self, default=lambda o:o.__dict__, sort_keys=False, indent=4)
+
+
+class Save:
+    def __init__(self, fraccion_actual,preguntas_respondidas,preguntas_correctas,tiempo_jugado):
+        self.fraccion_actual = fraccion_actual
+        self.preguntas_respondidas = preguntas_respondidas
+        self.preguntas_correctas = preguntas_correctas
+        self.tiempo_jugado = tiempo_jugado
+    def toJSON(self):
+        return dumps(self, default=lambda o:o.__dict__, sort_keys=False, indent=4)   
+
+
 
 def index(request):
     return HttpResponse("La pagina indice funciona, Bienvenido a los endpoints")
@@ -141,4 +162,59 @@ def tiempo(request):
         res = Tiempo(m,s)
         res_json = res.toJSON()
         return HttpResponse(res_json,content_type ="text/json-comment-filtered")
+
+@csrf_exempt
+def stats(request):
+    print('Realizando stats')
+    body = request.body.decode('UTF-8')
+    jsoncito = loads(body)
+    jsoncito = loads(body)
+    numLista = jsoncito['num_lista']
+    grupo = jsoncito['grupo']
+    grado = jsoncito['grado']
+
+    if (numLista in range(1,28)) and (grupo == "A") or (grupo == "B") and (grado in range(1,6)):
+        tiempo = str(random.randint(1,1000)) + "segundos"
+        tasa = random.randint(1,100)
+        problemas = random.randint(1,15)
+        res = Stats(tiempo,tasa,problemas)
+        res_json = res.toJSON(res)
+        return HttpResponse(res_json,content_type ="text/json-comment-filtered")
+    
+    else:
+        tiempo = None
+        tasa = None
+        res =  None
+        res = Stats(tiempo,tasa,problemas)
+        res_json = res.toJSON(res)
+        return HttpResponse(res_json,content_type ="text/json-comment-filtered")
+    
+@csrf_exempt
+def save(request):
+    print("Realizando save")
+    body = request.body.decode('UTF-8')
+    jsoncito = loads(body)
+    jsoncito = loads(body)
+    numLista = jsoncito['num_lista']
+    grupo = jsoncito['grupo']
+    grado = jsoncito['grado']
+
+    if (numLista in range(1,28)) and (grupo == "A") or (grupo == "B") and (grado in range(1,6)):
+        fraccion = str(random.randint(1,8))+"/"+str(random.randint(2,4))
+        pregRes = random.randint(0,10)
+        pregCor = random.randint(0,10)
+        tiempo = random.randint(0,5000)
+        res = Save(fraccion,pregCor,pregRes,tiempo)
+        res_json = res.toJSON(res)
+        return HttpResponse(res_json,content_type ="text/json-comment-filtered")
+    
+    else:
+        fraccion = None
+        pregRes = None
+        pregCor = None
+        tiempo = None
+        res = Save(fraccion,pregCor,pregRes,tiempo)
+        res_json = res.toJSON(res)
+        return HttpResponse(res_json,content_type ="text/json-comment-filtered")
+
 
