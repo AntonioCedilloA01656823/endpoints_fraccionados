@@ -5,6 +5,14 @@ from json import loads,dumps
 import random
 
 # Create your views here.
+
+class Tiempo:
+     def __init__(self, minutos,segundos):
+        self.minutos = minutos
+        self.segundos = segundos
+     def toJSON(self):
+        return dumps(self, default=lambda o:o.__dict__, sort_keys=False, indent=4)
+
 class Nivel:
     def __init__(self, tema, descripcion):
         self.tema = tema
@@ -104,9 +112,33 @@ def calificacion(request):
         return HttpResponse(res_json,content_type ="text/json-comment-filtered")
     
     else:
-        calif = 0
+        calif = None
         res = Calificacion(calif)
         res_json = res.toJSON()
         return HttpResponse(res_json,content_type ="text/json-comment-filtered")
+    
 
+@csrf_exempt
+def tiempo(request):
+    print("Realizando tiempo")
+    body = request.body.decode('UTF-8')
+    jsoncito = loads(body)
+
+    numLista = jsoncito['num_lista']
+    grupo = jsoncito['grupo']
+    grado = jsoncito['grado']
+
+    if (numLista in range(1,28)) and (grupo == "A") or (grupo == "B") and (grado in range(1,6)):
+        m = random.randint(0,59)
+        s = random.randint(0,59)
+        res = Tiempo(m,s)
+        res_json = res.toJSON()
+        return HttpResponse(res_json,content_type ="text/json-comment-filtered")
+    
+    else:
+        m = None
+        s = None
+        res = Tiempo(m,s)
+        res_json = res.toJSON()
+        return HttpResponse(res_json,content_type ="text/json-comment-filtered")
 
