@@ -12,7 +12,9 @@ class Scoreboard:
         self.intento2 = intento2
         self.intento3 = intento3
         self.intento4 = intento4
-        self.intento5 = intento5 
+        self.intento5 = intento5
+    def toJSON(self):
+        return dumps(self, default=lambda o:o.__dict__, sort_keys=False, indent=4)   
 
 class Tiempo:
      def __init__(self, minutos,segundos):
@@ -186,7 +188,7 @@ def stats(request):
         tasa = random.randint(1,100)
         problemas = random.randint(1,15)
         res = Stats(tiempo,tasa,problemas)
-        res_json = res.toJSON(res)
+        res_json = res.toJSON()
         return HttpResponse(res_json,content_type ="text/json-comment-filtered")
     
     else:
@@ -194,7 +196,7 @@ def stats(request):
         tasa = None
         res =  None
         res = Stats(tiempo,tasa,problemas)
-        res_json = res.toJSON(res)
+        res_json = res.toJSON()
         return HttpResponse(res_json,content_type ="text/json-comment-filtered")
     
 @csrf_exempt
@@ -213,7 +215,7 @@ def save(request):
         pregCor = random.randint(0,10)
         tiempo = random.randint(0,5000)
         res = Save(fraccion,pregCor,pregRes,tiempo)
-        res_json = res.toJSON(res)
+        res_json = res.toJSON()
         return HttpResponse(res_json,content_type ="text/json-comment-filtered")
     
     else:
@@ -222,9 +224,10 @@ def save(request):
         pregCor = None
         tiempo = None
         res = Save(fraccion,pregCor,pregRes,tiempo)
-        res_json = res.toJSON(res)
+        res_json = res.toJSON()
         return HttpResponse(res_json,content_type ="text/json-comment-filtered")
 
+@csrf_exempt
 def scoreboard(request):
     print("Realizando scoreboard")
     body = request.body.decode('UTF-8')
@@ -240,8 +243,8 @@ def scoreboard(request):
         i3 = random.randint(0,50)
         i4 = random.randint(0,50)
         i5 = random.randint(0,50)
-        res =  Scoreboard(i1,i2,i3,i4,i5)
-        res_json = res.toJSON(res)
+        res = Scoreboard(i1,i2,i3,i4,i5)
+        res_json = res.toJSON()
         return HttpResponse(res_json,content_type ="text/json-comment-filtered")
     
     else:
@@ -250,7 +253,7 @@ def scoreboard(request):
         i3 = None
         i4 = None
         i5 = None
-        res =  Scoreboard(i1,i2,i3,i4,i5)
-        res_json = res.toJSON(res)
+        res = Scoreboard(i1,i2,i3,i4,i5)
+        res_json = res.toJSON()
         return HttpResponse(res_json,content_type ="text/json-comment-filtered")
 
