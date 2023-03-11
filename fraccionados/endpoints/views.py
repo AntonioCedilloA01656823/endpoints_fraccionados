@@ -6,6 +6,14 @@ import random
 
 # Create your views here.
 
+class Scoreboard:
+    def __init__(self,intento1,intento2,intento3,intento4,intento5):
+        self.intento1 = intento1
+        self.intento2 = intento2
+        self.intento3 = intento3
+        self.intento4 = intento4
+        self.intento5 = intento5 
+
 class Tiempo:
      def __init__(self, minutos,segundos):
         self.minutos = minutos
@@ -217,4 +225,32 @@ def save(request):
         res_json = res.toJSON(res)
         return HttpResponse(res_json,content_type ="text/json-comment-filtered")
 
+def scoreboard(request):
+    print("Realizando scoreboard")
+    body = request.body.decode('UTF-8')
+    jsoncito = loads(body)
+    jsoncito = loads(body)
+    numLista = jsoncito['num_lista']
+    grupo = jsoncito['grupo']
+    grado = jsoncito['grado']
+
+    if (numLista in range(1,28)) and (grupo == "A") or (grupo == "B") and (grado in range(1,6)):
+        i1 = random.randint(0,50)
+        i2 = random.randint(0,50)
+        i3 = random.randint(0,50)
+        i4 = random.randint(0,50)
+        i5 = random.randint(0,50)
+        res =  Scoreboard(i1,i2,i3,i4,i5)
+        res_json = res.toJSON(res)
+        return HttpResponse(res_json,content_type ="text/json-comment-filtered")
+    
+    else:
+        i1 = None
+        i2 = None
+        i3 = None
+        i4 = None
+        i5 = None
+        res =  Scoreboard(i1,i2,i3,i4,i5)
+        res_json = res.toJSON(res)
+        return HttpResponse(res_json,content_type ="text/json-comment-filtered")
 
