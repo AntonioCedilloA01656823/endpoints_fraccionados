@@ -257,3 +257,19 @@ def scoreboard(request):
         res_json = res.toJSON()
         return HttpResponse(res_json,content_type ="text/json-comment-filtered")
 
+
+@csrf_exempt 
+def login(request):
+    body = request.body.decode('UTF-8')
+    eljson = loads(body)
+    grado = eljson['grado']
+    grupo = eljson['grupo']
+    num_lista = eljson['num_lista']  
+    con = sqlite3.connect("db.sqlite3")
+    cur = con.cursor()   
+    cur.execute(f"SELECT grado from usuarios WHERE grado = '{grado}' AND grupo = '{grupo}' AND num_lista = '{num_lista}'")
+
+    if not cur.fetchone():
+        return HttpResponse("Usuario invalido, intentalo de nuevo")
+    else:
+        return HttpResponse("Bienvenid@!")
