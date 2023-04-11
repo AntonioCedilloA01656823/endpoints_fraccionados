@@ -282,4 +282,68 @@ def login(request):
 
 @csrf_exempt
 def crearUsuario():
+        body = request.body.decode('UTF-8')
+        eljson = loads(body)
+        id = eljson['id']
+        num_lista = eljson['numero_lista']
+        grupo = eljson['grupo']
+        rol = eljson['rol']
+        con = sqlite3.connect("db.sqlite3")
+        cur = con.cursor()
+        creacion = cur.execute("INSERT INTO Usuario (id,numero_lista,grupo,rol) VALUES (?,?,?,?)",(id,num_lista,grupo,rol))
+        con.commit()
+        return HttpResponse("El usuario ha sido creado exitosamente")
+
+@csrf_exempt
+def borrarUsuario(request):
+    body = request.body.decode('UTF-8')
+    eljson = loads(body)
+    id = eljson['id']
+    con = sqlite3.connect("db.sqlite3")
+    cur = con.cursor()
+    bor1 = cur.execute("DELETE FROM Usuario WHERE id = ?", str(id))
+    bor2 = cur.execute("DELETE FROM Estadistica_por_intento WHERE id = ?", str(id))
+    con.commit()
+    return HttpResponse("Listo! el usuario y las partidas han sido borrados.")
+
+
+@csrf_exempt
+def actualizarUsuario(request):
+    body = request.body.decode('UTF-8')
+    eljson = loads(body)
+    id = eljson['id']
+    new_num = eljson['nuevo_numero_lista']
+    new_grupo = eljson['nuevo_grupo']
+    new_rol = eljson['nuevo_rol']
+    con = sqlite3.connect("db.sqlite3")
+    cur = con.cursor()
+    actualizacion = cur.execute("UPDATE Usuario SET  numero_lista = ? grupo = ? rol = ? WHERE id = ?", (str(new_num),new_grupo,new_rol,str(id)))
+    con.commit()
+    return HttpResponse("Listo! Los datos han sido actualizados.")
+
+@csrf_exempt
+def mostrarUsuario(request):
+    con = sqlite3.connect("db.sqlite3")
+    cur = con.cursor()
+    res = cur.execute("SELECT * from Usuarios")
+    resultado = res.fetchall()
+    lista = []
+    for registro in resultado:
+        id,num,grupo,rol = registro
+        diccionario = {"id":id,"numero_lista":num,"grupo":grupo,"rol":rol}
+        lista.append(diccionario)
+    return HttpResponse(lista)
+
+
+@csrf_exempt
+def usuarios(request):
+    if request.method == 'POST':
+        return(crearUsuario(request))
+    elif request.method == 'DELETE':
+        return(borrarUsuario(request))
+    elif request.method == 'GET':
+        return(mostrarUsuario(request))
+    elif request.method == 'PUT':
+        return(actualizarUsuario(request))
     
+
