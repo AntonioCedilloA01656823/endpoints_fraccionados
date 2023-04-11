@@ -68,7 +68,7 @@ def index(request):
     return HttpResponse("La pagina indice funciona, Bienvenido a los endpoints")
 
 @csrf_exempt
-def login(request):
+def login(request): #cambiar esto 
     print("Se realiza el login")
     body = request.body.decode('UTF-8')
     jsoncito = loads(body)
@@ -257,3 +257,29 @@ def scoreboard(request):
         res_json = res.toJSON()
         return HttpResponse(res_json,content_type ="text/json-comment-filtered")
 
+
+
+@csrf_exempt 
+def login(request):
+    body = request.body.decode('UTF-8')
+    eljson = loads(body)
+    grado = eljson['grado']
+    grupo = eljson['grupo']
+    num_lista = eljson['num_lista']  
+    con = sqlite3.connect("db.sqlite3")
+    cur = con.cursor()   
+    cur.execute(f"SELECT grado from usuarios WHERE grado = '{grado}' AND grupo = '{grupo}' AND num_lista = '{num_lista}'")
+
+    if not cur.fetchone():
+        return HttpResponse("Usuario invalido, intentalo de nuevo")
+    else:
+        return HttpResponse("Bienvenid@!")
+    
+
+
+    #Para los servicios REST hay que crear un UI (este Moi le sabe mas a esto)
+    #ahorita los hago que jalen con puro JSON/Postman
+
+@csrf_exempt
+def crearUsuario():
+    

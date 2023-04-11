@@ -10,4 +10,8 @@ urlpatterns = [
     path('stats',views.stats,name='stats'),
     path('save',views.save,name='save') , 
     path('scoreboard',views.scoreboard,name='scoreboard'),
+    path('login',views.login,name='login'),
+
+    
+
 ]
