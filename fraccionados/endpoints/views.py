@@ -346,4 +346,11 @@ def usuarios(request):
     elif request.method == 'PUT':
         return(actualizarUsuario(request))
     
+#Estadisticas de partidas 
+
+
+""" @csrf_exempt #esto se haria con el juego, hay que ver como hacerle
+def crearStats(request):
+    body = request.body.decode('UTF-8')
+    eljson = loads(body) """
 
